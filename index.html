@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GhanaHealth Portal — National Hospital Registration System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Shown only when an admin turns on maintenance mode from the console -->
+<div id="maint-banner" style="display:none;background:var(--amber);color:#fff;text-align:center;padding:8px 14px;font-size:.8rem;font-weight:600;position:relative;z-index:1100">
+  ⚠️ GhanaHealth Portal is undergoing scheduled maintenance. Some features may be temporarily unavailable.
+</div>
+
+<!-- ══════════════════════ NAVBAR ══════════════════════ -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">GH</div>
+    <div class="nav-title">GhanaHealth Portal
+      <span>National Hospital Registration System</span>
+    </div>
+  </div>
+  <div class="nav-links" id="nav-pub">
+    <button class="nav-btn nb-ghost" onclick="showPage('auth');switchAuthTab('login')">Sign In</button>
+    <button class="nav-btn nb-gold" onclick="showPage('auth');switchAuthTab('register')">Register</button>
+  </div>
+  <div class="nav-user" id="nav-user">
+    <div class="nav-avatar" id="nav-ini">KA</div>
+    <span class="nav-username" id="nav-uname">Patient</span>
+    <button class="nav-btn nb-red" onclick="logout()">Sign Out</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════ LANDING PAGE ══════════════════════ -->
+<div class="page active" id="page-landing">
+  <div class="hero">
+    <div class="hero-badge">🇬🇭 Ministry of Health — Republic of Ghana</div>
+    <h1>Your Health Record,<br><em>One Card Away.</em></h1>
+    <p class="hero-sub">Register once with your Ghana Card and access all hospital services nationwide. Get your personal QR code for instant identification at any department — no paperwork, no delays.</p>
+    <div class="hero-actions">
+      <button class="btn btn-gd btn-lg" onclick="showPage('auth');switchAuthTab('register')">📋 Register as a Patient</button>
+      <button class="btn btn-out btn-lg" onclick="showPage('auth');switchAuthTab('login')">🔐 Patient Sign In</button>
+    </div>
+  </div>
+  <div class="chips-section">
+    <p class="chips-label">Services Available Across All Registered Hospitals</p>
+    <div class="chips-wrap">
+      <div class="chip">🚑 Emergency Care</div><div class="chip">🔬 Surgery</div>
+      <div class="chip">🤱 Maternal &amp; Child Health</div><div class="chip">🩻 Diagnostic Imaging</div>
+      <div class="chip">🧪 Laboratory Services</div><div class="chip">💊 Pharmacy</div>
+      <div class="chip">🫀 Renal Dialysis</div><div class="chip">❤️ Cardiothoracic Surgery</div>
+      <div class="chip">👂 ENT Services</div><div class="chip">🦷 Dental &amp; Oral Surgery</div>
+      <div class="chip">🧠 Psychiatry</div><div class="chip">🏃 Physiotherapy</div>
+      <div class="chip">🥗 Nutrition &amp; Dietetics</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ AUTH PAGE ══════════════════════ -->
+<div class="page" id="page-auth">
+  <div class="auth-wrap" style="padding-top:2rem">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="atab-register" onclick="switchAuthTab('register')">📋 Patient Registration</button>
+      <button class="auth-tab" id="atab-login" onclick="switchAuthTab('login')">🔐 Sign In</button>
+    </div>
+    <div class="auth-card">
+
+      <!-- ── REGISTER PANEL ── -->
+      <div class="auth-panel active" id="apanel-register">
+        <div class="prog-bar"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+        <p class="note">Fields marked <span class="req">*</span> are required. Data protected under Ghana Data Protection Act, 2012 (Act 843).</p>
+        <div id="reg-alert" class="alert al-err">⚠️ <span id="reg-alert-msg"></span></div>
+
+        <div class="sdiv"><div class="dot"></div><h3>Ghana Card &amp; Identity</h3></div>
+        <div class="fgrid">
+          <div class="field full">
+            <label>NIA / Ghana Card Number <span class="req">*</span></label>
+            <div class="iw"><span class="ico">🪪</span><input type="text" id="r-ghana" placeholder="GHA-000000000-0" maxlength="17" oninput="fmtGhana(this);updProg()"></div>
+          </div>
+          <div class="field"><label>Birth Certificate Number <span class="opt">(Optional)</span></label><input type="text" id="r-bcert" placeholder="BC-2024-001234"></div>
+          <div class="field"><label>National ID Number <span class="opt">(Optional)</span></label><input type="text" id="r-nid" placeholder="NID-XXXXXXXXXX"></div>
+          <div class="field full"><label>NHIS Number <span class="opt">(Optional)</span></label><input type="text" id="r-nhis" placeholder="NHIS-XXXXXXXXXX"></div>
+        </div>
+
+        <div class="sdiv"><div class="dot"></div><h3>Personal Information</h3></div>
+        <div class="fgrid">
+          <div class="field"><label>First Name <span class="req">*</span></label><input type="text" id="r-fname" placeholder="e.g. Kwame" oninput="updProg()"></div>
+          <div class="field"><label>Last Name <span class="req">*</span></label><input type="text" id="r-lname" placeholder="e.g. Mensah" oninput="updProg()"></div>
+          <div class="field"><label>Date of Birth <span class="req">*</span></label><input type="date" id="r-dob" oninput="updProg()"></div>
+          <div class="field"><label>Gender <span class="req">*</span></label>
+            <div class="radio-row">
+              <div class="ro"><input type="radio" name="gender" id="g-m" value="Male"><label for="g-m">♂ Male</label></div>
+              <div class="ro"><input type="radio" name="gender" id="g-f" value="Female"><label for="g-f">♀ Female</label></div>
+              <div class="ro"><input type="radio" name="gender" id="g-o" value="Other"><label for="g-o">⚬ Other</label></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sdiv"><div class="dot"></div><h3>Contact Details</h3></div>
+        <div class="fgrid">
+          <div class="field"><label>Phone Number <span class="req">*</span></label><div class="iw"><span class="ico">📱</span><input type="tel" id="r-phone" placeholder="024 XXX XXXX" oninput="updProg()"></div></div>
+          <div class="field"><label>Email Address <span class="req">*</span></label><div class="iw"><span class="ico">✉️</span><input type="email" id="r-email" placeholder="yourname@email.com" oninput="updProg()"></div></div>
+          <div class="field full"><label>Home Address <span class="opt">(Optional)</span></label><input type="text" id="r-address" placeholder="Street, Town, Region"></div>
+        </div>
+
+        <div class="sdiv"><div class="dot"></div><h3>Create Login Credentials</h3></div>
+        <p class="note" style="margin-top:-.4rem;margin-bottom:.8rem">You will use your <strong>email address</strong> and password to sign in to the portal.</p>
+        <div class="fgrid">
+          <div class="field"><label>Password <span class="req">*</span></label><input type="password" id="r-pwd" placeholder="Min. 8 characters" oninput="updProg();chkPwd(this.value)"><div id="pwd-str" style="font-size:.72rem;margin-top:3px;color:var(--tmut)"></div></div>
+          <div class="field"><label>Confirm Password <span class="req">*</span></label><input type="password" id="r-cpwd" placeholder="Re-enter password" oninput="updProg()"></div>
+        </div>
+
+        <div class="consent-box">
+          <input type="checkbox" id="consent">
+          <label for="consent">I consent to the collection and processing of my personal health data by the Ghana Health Service in accordance with the <strong>Data Protection Act, 2012 (Act 843)</strong> and the Ministry of Health's Privacy Policy. I confirm all information provided is accurate and truthful.</label>
+        </div>
+
+        <button class="sbtn" onclick="submitReg()">✅ Complete Registration &amp; Generate QR Code</button>
+      </div>
+
+      <!-- ── LOGIN PANEL ── -->
+      <div class="auth-panel" id="apanel-login">
+        <div class="login-box">
+          <h2>Welcome Back</h2>
+          <p class="sub">Sign in with the <strong>email address</strong> you registered with to access your patient portal and manage your health services.</p>
+
+          <div id="log-alert" class="alert al-err">⚠️ <span id="log-alert-msg"></span></div>
+          <div id="log-ok" class="alert al-ok">✅ <span id="log-ok-msg"></span></div>
+
+          <div class="field" style="margin-bottom:.9rem">
+            <label>Email Address</label>
+            <div class="iw"><span class="ico">✉️</span><input type="email" id="l-email" placeholder="yourname@email.com"></div>
+          </div>
+          <div class="field" style="margin-bottom:1.1rem">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <label style="margin:0">Password</label>
+              <a href="#" class="forgot" onclick="forgotPwd(event)">Forgot password?</a>
+            </div>
+            <div class="iw"><span class="ico">🔒</span><input type="password" id="l-pwd" placeholder="Your password" onkeydown="if(event.key==='Enter')submitLogin()"></div>
+          </div>
+
+          <button class="sbtn" onclick="submitLogin()">🔐 Sign In to Patient Portal</button>
+
+          <div class="div-or">or continue with</div>
+          <div class="sso-row">
+            <button class="sso-btn" onclick="ssoLogin('Ghana Card')">🪪 Ghana Card</button>
+            <button class="sso-btn" onclick="ssoLogin('NHIS')">🏥 NHIS Number</button>
+          </div>
+          <p class="reg-link">New patient? <a href="#" onclick="switchAuthTab('register')">Create your account →</a></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ DASHBOARD PAGE ══════════════════════ -->
+<div class="page" id="page-dashboard">
+  <div class="db-wrap">
+
+    <div class="db-sidenav">
+      <button class="db-si active" onclick="switchDb('overview')" id="dbnav-overview"><span class="si">🏠</span> Overview</button>
+      <button class="db-si" onclick="switchDb('services')" id="dbnav-services"><span class="si">🏥</span> Request Service</button>
+      <button class="db-si" onclick="switchDb('appointments')" id="dbnav-appointments"><span class="si">📅</span> Appointments</button>
+      <button class="db-si" onclick="switchDb('complaints')" id="dbnav-complaints"><span class="si">📝</span> Complaints</button>
+      <button class="db-si" onclick="switchDb('contact')" id="dbnav-contact"><span class="si">📞</span> Contact &amp; Help</button>
+      <div class="db-sep"></div>
+      <button class="db-si" onclick="switchDb('qr')" id="dbnav-qr"><span class="si">📲</span> My QR Code</button>
+    </div>
+
+    <div class="db-content">
+
+      <!-- OVERVIEW -->
+      <div class="db-sec active" id="db-overview">
+        <div class="db-sec-hdr"><h2>Patient Dashboard</h2><p>Welcome back. Here's a summary of your health portal activity.</p></div>
+
+        <div class="pt-banner">
+          <div class="pt-ava" id="db-ava">KM</div>
+          <div class="pt-info">
+            <h3 id="db-name">Patient Name</h3>
+            <p id="db-details">—</p>
+            <span class="pt-pid" id="db-pid">GH-PAT-000000</span>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-c"><div class="stat-ico">📅</div><div class="stat-num" id="stat-a">0</div><div class="stat-lbl">Appointments</div></div>
+          <div class="stat-c"><div class="stat-ico">🏥</div><div class="stat-num" id="stat-r">0</div><div class="stat-lbl">Service Requests</div></div>
+          <div class="stat-c"><div class="stat-ico">📝</div><div class="stat-num" id="stat-c">0</div><div class="stat-lbl">Complaints</div></div>
+        </div>
+
+        <div class="qa-grid">
+          <div class="qa-card" onclick="switchDb('services')"><div class="qa-ico">🏥</div><div class="qa-lbl">Request Service</div></div>
+          <div class="qa-card" onclick="switchDb('appointments')"><div class="qa-ico">📅</div><div class="qa-lbl">Book Appointment</div></div>
+          <div class="qa-card" onclick="switchDb('complaints')"><div class="qa-ico">📝</div><div class="qa-lbl">File a Complaint</div></div>
+          <div class="qa-card" onclick="switchDb('contact')"><div class="qa-ico">📞</div><div class="qa-lbl">Contact Hospital</div></div>
+        </div>
+
+        <div class="db-card">
+          <p class="db-card-title">Recent Activity</p>
+          <div style="overflow-x:auto">
+            <table class="htable">
+              <thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Hospital</th><th>Status</th></tr></thead>
+              <tbody id="hist-body"><tr><td colspan="5" style="text-align:center;color:var(--tmut);padding:18px;font-size:.84rem">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SERVICE REQUEST -->
+      <div class="db-sec" id="db-services">
+        <div class="db-sec-hdr"><h2>Request a Hospital Service</h2><p>Select a department and provide your clinical details. Our team will review and respond within 24 hours.</p></div>
+        <div id="svc-alert" class="alert al-err">⚠️ <span id="svc-alert-msg"></span></div>
+
+        <div class="db-card">
+          <p class="db-card-title">Step 1 — Select Service / Department</p>
+          <div class="svc-sel-grid" id="svc-grid"></div>
+        </div>
+
+        <div class="db-card" id="svc-form" style="display:none">
+          <p class="db-card-title">Step 2 — Clinical &amp; Request Details</p>
+          <div class="fgrid">
+            <div class="field"><label>Preferred Hospital <span class="req">*</span></label><select id="sv-hosp"></select></div>
+            <div class="field"><label>Urgency Level <span class="req">*</span></label>
+              <select id="sv-urgency"><option value="">— Select —</option>
+                <option>🟢 Routine — Within 7 days</option><option>🟡 Semi-Urgent — Within 48 hours</option>
+                <option>🟠 Urgent — Same day</option><option>🔴 Emergency — Immediately</option></select>
+            </div>
+            <div class="field full"><label>Primary Symptoms / Reason <span class="req">*</span></label>
+              <textarea id="sv-symptoms" placeholder="Describe your symptoms, medical history, or reason for requesting this service in full detail…"></textarea>
+            </div>
+            <div class="field"><label>Duration of Symptoms</label><input type="text" id="sv-duration" placeholder="e.g. 3 days, 2 weeks"></div>
+            <div class="field"><label>Current Medications <span class="opt">(if any)</span></label><input type="text" id="sv-meds" placeholder="e.g. Paracetamol 500mg"></div>
+            <div class="field"><label>Known Allergies</label><input type="text" id="sv-allergy" placeholder="e.g. Penicillin, Latex, None"></div>
+            <div class="field"><label>Previous Hospitalization <span class="opt">(if any)</span></label><input type="text" id="sv-prev" placeholder="e.g. Appendectomy, 2020, KATH"></div>
+            <div class="field"><label>Emergency Contact Name <span class="req">*</span></label><input type="text" id="sv-ec-name" placeholder="Full name of next of kin"></div>
+            <div class="field"><label>Emergency Contact Phone <span class="req">*</span></label><input type="tel" id="sv-ec-phone" placeholder="024 XXX XXXX"></div>
+            <div class="field"><label>Relationship to Patient</label>
+              <select id="sv-ec-rel"><option value="">— Relationship —</option><option>Parent</option><option>Spouse / Partner</option><option>Sibling</option><option>Child</option><option>Guardian</option><option>Friend</option><option>Other</option></select>
+            </div>
+            <div class="field full"><label>Additional Notes for the Medical Team</label>
+              <textarea id="sv-notes" style="min-height:70px" placeholder="Any other information the hospital should know before your visit…"></textarea>
+            </div>
+          </div>
+          <button class="sbtn" onclick="submitSvcReq()">📤 Submit Service Request</button>
+        </div>
+      </div>
+
+      <!-- APPOINTMENTS -->
+      <div class="db-sec" id="db-appointments">
+        <div class="db-sec-hdr"><h2>Book an Appointment</h2><p>Schedule a consultation or procedure with any of our hospital departments.</p></div>
+        <div id="appt-alert" class="alert al-err">⚠️ <span id="appt-alert-msg"></span></div>
+
+        <div class="db-card">
+          <p class="db-card-title">Upcoming Appointments</p>
+          <div id="appt-list"><p style="color:var(--tmut);font-size:.85rem">Loading…</p></div>
+        </div>
+
+        <div class="db-card">
+          <p class="db-card-title">Book New Appointment</p>
+          <div class="fgrid">
+            <div class="field"><label>Service / Department <span class="req">*</span></label>
+              <select id="ap-svc">
+                <option value="">— Select service —</option>
+                <option>Emergency Care</option><option>Surgery</option><option>Maternal &amp; Child Health</option>
+                <option>Diagnostic Imaging</option><option>Laboratory Services</option><option>Pharmacy Consultation</option>
+                <option>Renal Dialysis</option><option>Cardiothoracic Surgery</option><option>ENT Services</option>
+                <option>Dental &amp; Oral Surgery</option><option>Psychiatry</option><option>Physiotherapy</option>
+                <option>Nutrition &amp; Dietetics</option>
+              </select>
+            </div>
+            <div class="field"><label>Preferred Hospital <span class="req">*</span></label>
+              <select id="ap-hosp" onchange="loadSlots(document.getElementById('ap-date').value)"></select>
+            </div>
+            <div class="field"><label>Preferred Date <span class="req">*</span></label><input type="date" id="ap-date" onchange="loadSlots(this.value)"></div>
+            <div class="field"><label>Appointment Mode <span class="req">*</span></label>
+              <select id="ap-mode"><option value="">— Select —</option>
+                <option>In-Person Visit</option><option>Telehealth / Video Call</option><option>Phone Consultation</option>
+              </select>
+            </div>
+            <div class="field full"><label>Available Time Slots <span class="req">*</span></label>
+              <div class="ts-wrap" id="ts-wrap"><span style="color:var(--tmut);font-size:.82rem">Select a hospital and date above to see available time slots.</span></div>
+            </div>
+            <div class="field full"><label>Reason for Appointment <span class="req">*</span></label>
+              <textarea id="ap-reason" style="min-height:75px" placeholder="Briefly describe the purpose of this appointment…"></textarea>
+            </div>
+            <div class="field"><label>Doctor Preference <span class="opt">(Optional)</span></label><input type="text" id="ap-doc" placeholder="e.g. Dr. Asante (if known)"></div>
+            <div class="field"><label>Language Preference</label>
+              <select id="ap-lang"><option value="">— Any language —</option><option>English</option><option>Twi</option><option>Ga</option><option>Ewe</option><option>Hausa</option><option>Dagbani</option><option>Fante</option></select>
+            </div>
+          </div>
+          <button class="sbtn" onclick="submitAppt()">📅 Confirm Appointment Booking</button>
+        </div>
+      </div>
+
+      <!-- COMPLAINTS -->
+      <div class="db-sec" id="db-complaints">
+        <div class="db-sec-hdr"><h2>File a Complaint</h2><p>We take patient feedback seriously. All complaints are reviewed by our Patient Rights Unit within 48 working hours.</p></div>
+        <div id="comp-alert" class="alert al-err">⚠️ <span id="comp-alert-msg"></span></div>
+
+        <div class="db-card">
+          <p class="db-card-title">Nature of Complaint</p>
+          <div class="ctype-grid">
+            <div class="ctype" onclick="selCtype(this,'Staff Attitude')"><div class="ct-ico">😤</div><div class="ct-nm">Staff Attitude</div></div>
+            <div class="ctype" onclick="selCtype(this,'Long Wait Times')"><div class="ct-ico">⏳</div><div class="ct-nm">Long Wait Times</div></div>
+            <div class="ctype" onclick="selCtype(this,'Misdiagnosis / Treatment Error')"><div class="ct-ico">🩺</div><div class="ct-nm">Misdiagnosis</div></div>
+            <div class="ctype" onclick="selCtype(this,'Billing Issue')"><div class="ct-ico">💰</div><div class="ct-nm">Billing Issue</div></div>
+            <div class="ctype" onclick="selCtype(this,'Poor Facility Conditions')"><div class="ct-ico">🏚️</div><div class="ct-nm">Facility Conditions</div></div>
+            <div class="ctype" onclick="selCtype(this,'Medication Error')"><div class="ct-ico">💊</div><div class="ct-nm">Medication Error</div></div>
+            <div class="ctype" onclick="selCtype(this,'Privacy / Data Breach')"><div class="ct-ico">🔒</div><div class="ct-nm">Privacy Breach</div></div>
+            <div class="ctype" onclick="selCtype(this,'Delayed or Denied Care')"><div class="ct-ico">🚫</div><div class="ct-nm">Denied Care</div></div>
+            <div class="ctype" onclick="selCtype(this,'Other')"><div class="ct-ico">📋</div><div class="ct-nm">Other</div></div>
+          </div>
+          <input type="hidden" id="ctype-val">
+
+          <div class="fgrid" style="margin-top:1rem">
+            <div class="field"><label>Hospital / Facility <span class="req">*</span></label><select id="cp-hosp"></select></div>
+            <div class="field"><label>Date of Incident <span class="req">*</span></label><input type="date" id="cp-date"></div>
+            <div class="field"><label>Department / Ward <span class="opt">(Optional)</span></label><input type="text" id="cp-dept" placeholder="e.g. Emergency Ward, OPD, Ward B"></div>
+            <div class="field"><label>Staff Member Involved <span class="opt">(Optional)</span></label><input type="text" id="cp-staff" placeholder="Name or role if known"></div>
+            <div class="field full"><label>Detailed Description <span class="req">*</span></label>
+              <textarea id="cp-desc" placeholder="Please provide a clear and detailed account of what happened, including dates, times, and any witnesses if applicable…"></textarea>
+            </div>
+            <div class="field full"><label>Your Desired Resolution <span class="opt">(Optional)</span></label>
+              <textarea id="cp-res" style="min-height:70px" placeholder="What outcome would you consider satisfactory? e.g. formal apology, refund, staff retraining…"></textarea>
+            </div>
+            <div class="field full">
+              <label>Rate Your Overall Experience</label>
+              <div class="stars">
+                <button type="button" class="star" onclick="setRating(1)">★</button><button type="button" class="star" onclick="setRating(2)">★</button>
+                <button type="button" class="star" onclick="setRating(3)">★</button><button type="button" class="star" onclick="setRating(4)">★</button>
+                <button type="button" class="star" onclick="setRating(5)">★</button>
+              </div>
+              <p class="note" style="margin:0">1 star = Very Poor &nbsp;&nbsp; 5 stars = Excellent</p>
+              <input type="hidden" id="cp-rating">
+            </div>
+          </div>
+          <button class="sbtn" onclick="submitComplaint()">📤 Submit Complaint</button>
+        </div>
+      </div>
+
+      <!-- CONTACT & HELP -->
+      <div class="db-sec" id="db-contact">
+        <div class="db-sec-hdr"><h2>Contact &amp; Help</h2><p>Reach hospital teams directly or call our patient helplines for immediate assistance.</p></div>
+
+        <div class="emerg-banner">
+          <div class="eico">🚨</div>
+          <div>
+            <h4>Medical Emergency? Call Immediately</h4>
+            <p>GHS Emergency: <a href="tel:0800100999" id="em-line-1">0800-100-999</a> &nbsp;|&nbsp; National Ambulance: <a href="tel:193" id="em-line-2">193</a> &nbsp;|&nbsp; Police: <a href="tel:191">191</a> &nbsp;|&nbsp; Fire: <a href="tel:192">192</a></p>
+          </div>
+        </div>
+
+        <div class="hotline-card">
+          <h3>📞 GhanaHealth Patient Helplines</h3>
+          <a href="tel:0544260591" class="cn-row" id="hl-row-1">
+            <span style="font-size:1.2rem">📞</span>
+            <div><div class="cn-num" id="hl-num-1">0544 260 591</div><div class="cn-lbl">Patient Services &amp; General Enquiries</div></div>
+          </a>
+          <a href="tel:0550599102" class="cn-row" id="hl-row-2">
+            <span style="font-size:1.2rem">📞</span>
+            <div><div class="cn-num" id="hl-num-2">0550 599 102</div><div class="cn-lbl">Appointment Assistance &amp; Referrals</div></div>
+          </a>
+          <a href="tel:0800100999" class="cn-row" id="hl-row-3">
+            <span style="font-size:1.2rem">🚑</span>
+            <div><div class="cn-num" id="hl-num-3">0800 100 999</div><div class="cn-lbl">Ghana Health Service Emergency Line (Toll-Free, 24/7)</div></div>
+          </a>
+          <p style="font-size:.73rem;opacity:.65;margin-top:.7rem" id="hl-hours">📅 Lines open Monday – Friday, 8:00 AM – 5:00 PM. Emergency line available 24 hours, 7 days a week.</p>
+        </div>
+
+        <div class="db-card">
+          <p class="db-card-title">📨 Send a Message to a Hospital</p>
+          <div class="fgrid">
+            <div class="field"><label>Select Hospital <span class="req">*</span></label><select id="ct-hosp"></select></div>
+            <div class="field"><label>Subject / Topic <span class="req">*</span></label>
+              <select id="ct-subj">
+                <option value="">— Select topic —</option>
+                <option>Appointment Query</option><option>Test Results Follow-up</option>
+                <option>Billing &amp; Payment</option><option>Referral Request</option>
+                <option>Medical Records Request</option><option>Discharge Summary</option>
+                <option>NHIS Claim</option><option>General Enquiry</option><option>Other</option>
+              </select>
+            </div>
+            <div class="field full"><label>Your Message <span class="req">*</span></label>
+              <textarea id="ct-msg" placeholder="Write your message clearly. Include your Patient ID and relevant dates for faster assistance…"></textarea>
+            </div>
+            <div class="field"><label>Preferred Response Method</label>
+              <select id="ct-resp"><option>Phone Call</option><option>SMS</option><option>Email</option></select>
+            </div>
+          </div>
+          <button class="sbtn" onclick="submitContactMsg()">📨 Send Message to Hospital</button>
+        </div>
+
+        <div class="db-card">
+          <p class="db-card-title">❓ Frequently Asked Questions</p>
+          <div id="faq-wrap"></div>
+        </div>
+      </div>
+
+      <!-- MY QR CODE -->
+      <div class="db-sec" id="db-qr">
+        <div class="db-sec-hdr"><h2>My QR Code</h2><p>Present this QR code at any GhanaHealth-registered facility for instant patient identification.</p></div>
+        <div class="db-card" style="text-align:center">
+          <div id="db-qrcode"></div>
+          <div class="qr-pid" id="db-qr-pid">GH-PAT-000000</div>
+          <div id="db-qr-name" style="font-weight:700;color:var(--gd);font-size:1rem;margin:.4rem 0"></div>
+          <div id="db-qr-info" style="font-size:.79rem;color:var(--tmut);line-height:1.7;margin-bottom:1.1rem"></div>
+          <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap">
+            <button class="btn btn-gd" onclick="dlDbQr()">⬇ Download QR Code</button>
+            <button class="btn btn-out" onclick="window.print()">🖨 Print Card</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════ FOOTER ══════ -->
+<footer>
+  <div class="ft-logo"><div class="ft-logo-icon">GH</div><strong>GhanaHealth Portal</strong></div>
+  <div class="ft-links">
+    <a href="#">Privacy Policy</a><a href="#">Terms of Use</a><a href="#">Data Protection</a>
+    <a href="#">Help &amp; Support</a><a href="#">Contact Us</a><a href="#">Accessibility</a>
+  </div>
+  <div>© 2026 GhanaHealth Portal — <strong>Ministry of Health, Republic of Ghana</strong></div>
+  <div style="margin-top:3px">Authorized by the NHIA &amp; National Identification Authority (NIA)</div>
+  <div style="margin-top:3px;opacity:.45;font-size:.7rem">Patient Helplines: 0544 260 591 &nbsp;|&nbsp; 0550 599 102 &nbsp;|&nbsp; Emergency: 0800 100 999 (Toll-Free)</div>
+</footer>
+
+<!-- ══════ QR REGISTRATION MODAL ══════ -->
+<div class="modal-ov" id="qr-modal">
+  <div class="modal">
+    <button class="mc" onclick="closeMod('qr-modal')">✕</button>
+    <div class="mflag">🏥</div>
+    <h2>Registration Successful!</h2>
+    <p class="msub">Your patient profile has been created. Save or print your QR code — present it at any GhanaHealth-registered facility for instant identification.</p>
+    <div id="qrcode"></div>
+    <div class="qr-pid" id="m-pid">GH-PAT-000000</div>
+    <div id="m-name" style="font-weight:700;color:var(--gd);font-size:1rem;margin-bottom:5px"></div>
+    <div class="modal-info" id="m-info" style="font-size:.79rem;color:var(--tmut);line-height:1.6"></div>
+    <div class="m-acts">
+      <button class="m-dl" onclick="dlQr()">⬇ Download QR</button>
+      <button class="m-pr" onclick="window.print()">🖨 Print</button>
+    </div>
+    <button class="sbtn" onclick="goToDash()" style="margin-top:1rem;background:linear-gradient(135deg,var(--gold),var(--gol));color:var(--gd)">Go to My Patient Dashboard →</button>
+  </div>
+</div>
+
+<!-- ══════ SUCCESS MODAL ══════ -->
+<div class="modal-ov" id="succ-modal">
+  <div class="modal">
+    <button class="mc" onclick="closeMod('succ-modal')">✕</button>
+    <div class="mflag" id="succ-ico">✅</div>
+    <h2 id="succ-title">Done!</h2>
+    <p class="msub" id="succ-sub"></p>
+    <div class="mref" id="succ-ref"></div>
+    <div class="mdetail" id="succ-detail"></div>
+    <button class="sbtn" onclick="closeMod('succ-modal')" style="margin-top:1.1rem">✓ Close</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ <span id="toast-msg"></span></div>
+
+<script src="js/api.js"></script>
+<script src="js/state.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/services.js"></script>
+<script src="js/appointments.js"></script>
+<script src="js/complaints.js"></script>
+<script src="js/contact.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

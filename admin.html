@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GhanaHealth Portal — Staff &amp; Admin Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ══════════════════════ LOGIN PAGE ══════════════════════ -->
+<div class="page active" id="page-login">
+  <div class="hero" style="padding-top:4rem">
+    <div class="hero-badge">🇬🇭 Ministry of Health — Republic of Ghana</div>
+    <h1>Staff &amp; Admin<br><em>Console.</em></h1>
+    <p class="hero-sub">Sign in with your GhanaHealth staff account to triage patient requests, manage hospitals, and administer the portal.</p>
+  </div>
+  <div class="auth-wrap" style="max-width:440px">
+    <div class="auth-card" style="border-radius:14px;border-top:1.5px solid var(--border)">
+      <div class="login-box" style="max-width:100%">
+        <h2>Staff Sign In</h2>
+        <p class="sub">This console is for hospital staff and Ministry administrators only. Patients should use the <a href="index.html" style="color:var(--gb);font-weight:700">Patient Portal</a>.</p>
+        <div id="log-alert" class="alert al-err">⚠️ <span id="log-alert-msg"></span></div>
+        <div class="field" style="margin-bottom:.9rem">
+          <label>Staff Email</label>
+          <div class="iw"><span class="ico">✉️</span><input type="email" id="l-email" placeholder="you@ghanahealth.gov.gh"></div>
+        </div>
+        <div class="field" style="margin-bottom:1.1rem">
+          <label>Password</label>
+          <div class="iw"><span class="ico">🔒</span><input type="password" id="l-pwd" placeholder="Your password" onkeydown="if(event.key==='Enter')submitAdminLogin()"></div>
+        </div>
+        <button class="sbtn" onclick="submitAdminLogin()">🔐 Sign In to Console</button>
+        <p class="note" style="margin-top:1rem;text-align:center">Demo admin: admin@ghanahealth.gov.gh / ChangeMe!2026</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ CONSOLE PAGE ══════════════════════ -->
+<div class="page" id="page-console">
+  <div class="admin-shell">
+    <nav class="admin-nav">
+      <div class="nav-brand">
+        <div class="nav-logo">GH</div>
+        <div class="nav-title">GhanaHealth Console<span>Staff &amp; Administration</span></div>
+      </div>
+      <div class="nav-user" style="display:flex">
+        <div class="nav-avatar" id="a-ini">ST</div>
+        <span class="nav-username" id="a-uname">Staff</span>
+        <span class="role-pill" id="a-role">STAFF</span>
+        <button class="nav-btn nb-red" onclick="adminLogout()">Sign Out</button>
+      </div>
+    </nav>
+
+    <div class="admin-body">
+      <div class="admin-sidenav" id="admin-nav-list">
+        <!-- populated by admin/main.js based on role -->
+      </div>
+
+      <div class="db-content">
+
+        <!-- ┌─ OVERVIEW ─┐ -->
+        <div class="db-sec active" id="ac-overview">
+          <div class="db-sec-hdr"><h2>System Overview</h2><p>Live counts across every registered hospital.</p></div>
+          <div class="kpi-row" id="kpi-row"></div>
+          <div class="two-col">
+            <div class="db-card">
+              <p class="db-card-title">Busiest Hospitals (confirmed appointments)</p>
+              <div class="bar-list" id="bar-hospitals"></div>
+            </div>
+            <div class="db-card">
+              <p class="db-card-title">Top Service Requests</p>
+              <div class="bar-list" id="bar-services"></div>
+            </div>
+          </div>
+          <div class="db-card">
+            <p class="db-card-title">Complaint Types</p>
+            <div class="bar-list" id="bar-complaints"></div>
+          </div>
+        </div>
+
+        <!-- ┌─ APPOINTMENTS ─┐ -->
+        <div class="db-sec" id="ac-appointments">
+          <div class="db-sec-hdr"><h2>Appointments</h2><p>All appointments booked across the network. Filter by hospital, date, or status.</p></div>
+          <div class="filter-bar">
+            <div class="field"><label>Hospital</label><select id="af-hosp" onchange="loadApptQueue()"></select></div>
+            <div class="field"><label>Date</label><input type="date" id="af-date" onchange="loadApptQueue()"></div>
+            <div class="field"><label>Status</label>
+              <select id="af-status" onchange="loadApptQueue()">
+                <option value="">All statuses</option>
+                <option value="confirmed">Confirmed</option><option value="cancelled">Cancelled</option>
+                <option value="completed">Completed</option><option value="no_show">No-show</option>
+              </select>
+            </div>
+            <button class="mini-btn" onclick="document.getElementById('af-hosp').value='';document.getElementById('af-date').value='';document.getElementById('af-status').value='';loadApptQueue()">Clear filters</button>
+          </div>
+          <div class="db-card"><div class="data-table-wrap"><table class="dt"><thead><tr>
+            <th>Patient</th><th>Service</th><th>Hospital</th><th>Date</th><th>Time</th><th>Mode</th><th>Status</th>
+          </tr></thead><tbody id="appt-q-body"></tbody></table></div></div>
+        </div>
+
+        <!-- ┌─ SERVICE REQUESTS ─┐ -->
+        <div class="db-sec" id="ac-requests">
+          <div class="db-sec-hdr"><h2>Service Requests</h2><p>Clinical intake requests awaiting triage or in progress.</p></div>
+          <div class="filter-bar">
+            <div class="field"><label>Status</label>
+              <select id="rf-status" onchange="loadRequestQueue()">
+                <option value="">All statuses</option>
+                <option value="pending">Pending</option><option value="triaged">Triaged</option>
+                <option value="in_progress">In Progress</option><option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+          <div class="db-card"><div class="data-table-wrap"><table class="dt"><thead><tr>
+            <th>Patient</th><th>Service</th><th>Urgency</th><th>Hospital</th><th>Received</th><th>Status</th><th>Action</th>
+          </tr></thead><tbody id="req-q-body"></tbody></table></div></div>
+        </div>
+
+        <!-- ┌─ COMPLAINTS ─┐ -->
+        <div class="db-sec" id="ac-complaints">
+          <div class="db-sec-hdr"><h2>Complaints</h2><p>Patient Rights Unit triage queue. Resolve or dismiss with a note.</p></div>
+          <div class="filter-bar">
+            <div class="field"><label>Status</label>
+              <select id="cf-status" onchange="loadComplaintQueue()">
+                <option value="">All statuses</option>
+                <option value="received">Received</option><option value="under_review">Under Review</option>
+                <option value="resolved">Resolved</option><option value="dismissed">Dismissed</option>
+              </select>
+            </div>
+          </div>
+          <div class="db-card"><div class="data-table-wrap"><table class="dt"><thead><tr>
+            <th>Patient</th><th>Type</th><th>Hospital</th><th>Incident Date</th><th>Rating</th><th>Status</th><th>Action</th>
+          </tr></thead><tbody id="cmp-q-body"></tbody></table></div></div>
+        </div>
+
+        <!-- ┌─ MESSAGES ─┐ -->
+        <div class="db-sec" id="ac-messages">
+          <div class="db-sec-hdr"><h2>Patient Messages</h2><p>Messages sent to hospital communications desks.</p></div>
+          <div class="filter-bar">
+            <div class="field"><label>Status</label>
+              <select id="mf-status" onchange="loadMessageQueue()">
+                <option value="">All statuses</option>
+                <option value="open">Open</option><option value="answered">Answered</option><option value="closed">Closed</option>
+              </select>
+            </div>
+          </div>
+          <div class="db-card"><div class="data-table-wrap"><table class="dt"><thead><tr>
+            <th>Patient</th><th>Subject</th><th>Hospital</th><th>Received</th><th>Status</th><th>Action</th>
+          </tr></thead><tbody id="msg-q-body"></tbody></table></div></div>
+        </div>
+
+        <!-- ┌─ USERS (admin only) ─┐ -->
+        <div class="db-sec" id="ac-users">
+          <div class="db-sec-hdr"><h2>Patients &amp; Staff</h2><p>Search accounts, manage staff access, and deactivate accounts when needed.</p></div>
+          <div class="filter-bar">
+            <div class="field" style="min-width:220px"><label>Search</label><input type="text" id="uf-search" placeholder="Name, email, or Patient ID" oninput="debouncedUserSearch()"></div>
+            <div class="field"><label>Role</label>
+              <select id="uf-role" onchange="loadUsers()">
+                <option value="">All roles</option><option value="patient">Patient</option>
+                <option value="staff">Staff</option><option value="admin">Admin</option>
+              </select>
+            </div>
+            <button class="btn btn-gold" onclick="openMod('staff-modal')">➕ Create Staff Account</button>
+          </div>
+          <div class="db-card"><div class="data-table-wrap"><table class="dt"><thead><tr>
+            <th>Name</th><th>Role</th><th>Email</th><th>Phone</th><th>Patient ID</th><th>Status</th><th>Joined</th><th>Action</th>
+          </tr></thead><tbody id="user-body"></tbody></table></div>
+          <div class="pager">
+            <span id="user-pager-info"></span>
+            <button class="mini-btn" onclick="changeUserPage(-1)">‹ Prev</button>
+            <button class="mini-btn" onclick="changeUserPage(1)">Next ›</button>
+          </div></div>
+        </div>
+
+        <!-- ┌─ HOSPITALS (admin only) ─┐ -->
+        <div class="db-sec" id="ac-hospitals">
+          <div class="db-sec-hdr"><h2>Registered Hospitals</h2><p>The facilities patients can select across the portal.</p></div>
+          <div class="db-card">
+            <p class="db-card-title">Add a Hospital</p>
+            <div class="fgrid">
+              <div class="field"><label>Name <span class="req">*</span></label><input type="text" id="h-name" placeholder="e.g. Sunyani Regional Hospital"></div>
+              <div class="field"><label>Region <span class="req">*</span></label><input type="text" id="h-region" placeholder="e.g. Bono"></div>
+              <div class="field"><label>Phone</label><input type="tel" id="h-phone" placeholder="e.g. 0352027000"></div>
+            </div>
+            <button class="btn btn-gd" style="margin-top:1rem" onclick="createHospital()">➕ Add Hospital</button>
+          </div>
+          <div class="db-card"><div class="data-table-wrap"><table class="dt"><thead><tr>
+            <th>Name</th><th>Region</th><th>Phone</th><th>Status</th><th>Action</th>
+          </tr></thead><tbody id="hosp-body"></tbody></table></div></div>
+        </div>
+
+        <!-- ┌─ AUDIT LOG (admin only) ─┐ -->
+        <div class="db-sec" id="ac-audit">
+          <div class="db-sec-hdr"><h2>Audit Log</h2><p>Every sensitive action taken across the system, for accountability under Act 843.</p></div>
+          <div class="db-card"><div class="data-table-wrap"><table class="dt"><thead><tr>
+            <th>Time</th><th>Actor</th><th>Action</th><th>Entity</th><th>Details</th>
+          </tr></thead><tbody id="audit-body"></tbody></table></div>
+          <div class="pager">
+            <span id="audit-pager-info"></span>
+            <button class="mini-btn" onclick="changeAuditPage(-1)">‹ Prev</button>
+            <button class="mini-btn" onclick="changeAuditPage(1)">Next ›</button>
+          </div></div>
+        </div>
+
+        <!-- ┌─ SETTINGS (admin only) ─┐ -->
+        <div class="db-sec" id="ac-settings">
+          <div class="db-sec-hdr"><h2>System Settings</h2><p>Portal-wide configuration. Changes apply immediately.</p></div>
+          <div id="settings-err" class="alert al-err">⚠️ <span id="settings-err-msg"></span></div>
+          <div id="settings-alert" class="alert al-ok">✅ <span id="settings-alert-msg"></span></div>
+          <div class="db-card">
+            <div class="fgrid">
+              <div class="field"><label>Emergency Line</label><input type="tel" id="st-emergency" placeholder="0800-100-999"></div>
+              <div class="field"><label>National Ambulance</label><input type="tel" id="st-ambulance" placeholder="193"></div>
+              <div class="field"><label>Patient Services Line</label><input type="tel" id="st-phone1" placeholder="0544 260 591"></div>
+              <div class="field"><label>Appointment Assistance Line</label><input type="tel" id="st-phone2" placeholder="0550 599 102"></div>
+              <div class="field full"><label>Helpline Hours</label><input type="text" id="st-hours" placeholder="Monday – Friday, 8:00 AM – 5:00 PM (Emergency line 24/7)"></div>
+              <div class="field full"><label>Maintenance Mode</label>
+                <div class="radio-row">
+                  <div class="ro"><input type="radio" name="maint" id="maint-off" value="off"><label for="maint-off">🟢 Off</label></div>
+                  <div class="ro"><input type="radio" name="maint" id="maint-on" value="on"><label for="maint-on">🔴 On</label></div>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-gd" style="margin-top:1rem" onclick="saveSettings()">💾 Save Settings</button>
+          </div>
+        </div>
+
+      </div><!-- /db-content -->
+    </div><!-- /admin-body -->
+  </div><!-- /admin-shell -->
+</div><!-- /page-console -->
+
+<!-- ══════ CREATE STAFF MODAL ══════ -->
+<div class="modal-ov" id="staff-modal">
+  <div class="modal" style="text-align:left;max-width:440px">
+    <button class="mc" onclick="closeMod('staff-modal')">✕</button>
+    <h2 style="margin-bottom:1rem">Create Staff Account</h2>
+    <div id="staff-alert" class="alert al-err">⚠️ <span id="staff-alert-msg"></span></div>
+    <div class="field" style="margin-bottom:.8rem"><label>Full Name <span class="req">*</span></label>
+      <div class="fgrid"><input type="text" id="ns-fname" placeholder="First name"><input type="text" id="ns-lname" placeholder="Last name"></div>
+    </div>
+    <div class="field" style="margin-bottom:.8rem"><label>Email <span class="req">*</span></label><input type="email" id="ns-email" placeholder="name@ghanahealth.gov.gh"></div>
+    <div class="field" style="margin-bottom:.8rem"><label>Phone <span class="req">*</span></label><input type="tel" id="ns-phone" placeholder="024 XXX XXXX"></div>
+    <div class="field" style="margin-bottom:.8rem"><label>Temporary Password <span class="req">*</span></label><input type="password" id="ns-pwd" placeholder="Min. 8 characters"></div>
+    <div class="field" style="margin-bottom:.8rem"><label>Role <span class="req">*</span></label>
+      <select id="ns-role"><option value="staff">Staff (hospital-level access)</option><option value="admin">Admin (full system access)</option></select>
+    </div>
+    <div class="field" style="margin-bottom:.8rem"><label>Assigned Hospital <span class="opt">(staff only)</span></label><select id="ns-hosp"></select></div>
+    <button class="sbtn" onclick="createStaffAccount()">✅ Create Account</button>
+  </div>
+</div>
+
+<!-- ══════ RESOLVE COMPLAINT MODAL ══════ -->
+<div class="modal-ov" id="resolve-modal">
+  <div class="modal" style="text-align:left;max-width:440px">
+    <button class="mc" onclick="closeMod('resolve-modal')">✕</button>
+    <h2 style="margin-bottom:1rem">Update Complaint</h2>
+    <input type="hidden" id="rs-id">
+    <div class="field" style="margin-bottom:.8rem"><label>Status</label>
+      <select id="rs-status">
+        <option value="under_review">Under Review</option><option value="resolved">Resolved</option><option value="dismissed">Dismissed</option>
+      </select>
+    </div>
+    <div class="field" style="margin-bottom:.8rem"><label>Resolution Note</label><textarea id="rs-note" placeholder="What was done or decided…"></textarea></div>
+    <button class="sbtn" onclick="submitResolve()">✅ Save</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ <span id="toast-msg"></span></div>
+
+<script src="js/api.js"></script>
+<script src="js/state.js"></script>
+<script src="js/admin/auth.js"></script>
+<script src="js/admin/dashboard.js"></script>
+<script src="js/admin/appointments.js"></script>
+<script src="js/admin/serviceRequests.js"></script>
+<script src="js/admin/complaints.js"></script>
+<script src="js/admin/messages.js"></script>
+<script src="js/admin/users.js"></script>
+<script src="js/admin/hospitals.js"></script>
+<script src="js/admin/auditLog.js"></script>
+<script src="js/admin/settings.js"></script>
+<script src="js/admin/main.js"></script>
+</body>
+</html>
