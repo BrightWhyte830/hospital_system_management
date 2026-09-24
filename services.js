@@ -1,10 +1,10 @@
 const SVCS = [
-  { n: 'Emergency Care', i: '🚑' }, { n: 'Surgery', i: '🔬' },
-  { n: 'Maternal & Child Health', i: '🤱' }, { n: 'Diagnostic Imaging', i: '🩻' },
-  { n: 'Laboratory Services', i: '🧪' }, { n: 'Pharmacy', i: '💊' },
-  { n: 'Renal Dialysis', i: '🫀' }, { n: 'Cardiothoracic Surgery', i: '❤️' },
+  { n: 'Emergency Care', i: '🚑' }, { n: 'Surgery', i: '🩺' },
+  { n: 'Maternal & Child Health', i: '👶' }, { n: 'Diagnostic Imaging', i: '📷' },
+  { n: 'Laboratory Services', i: '🧫' }, { n: 'Pharmacy', i: '💊' },
+  { n: 'Renal Dialysis', i: '🩸' }, { n: 'Cardiothoracic Surgery', i: '❤️‍🩺' },
   { n: 'ENT Services', i: '👂' }, { n: 'Dental & Oral Surgery', i: '🦷' },
-  { n: 'Psychiatry', i: '🧠' }, { n: 'Physiotherapy', i: '🏃' },
+  { n: 'Psychiatry', i: '🧠' }, { n: 'Physiotherapy', i: '🦵' },
   { n: 'Nutrition & Dietetics', i: '🥗' },
 ];
 

@@ -17,7 +17,7 @@ async function loadRequestQueue() {
   }
   tbody.innerHTML = requests.map((r) => `
     <tr>
-      <td>${r.first_name} ${r.last_name}<br><span style="color:var(--tmut);font-size:.72rem">${r.patient_id}</span></td>
+      <td>${r.first_name} ${r.last_name}<br><span style="color:var(--tmut);font-size:.72rem">${r.patient_id} · Age: ${formatAge(null, r.patient_dob)}</span></td>
       <td>${r.service}</td>
       <td>${r.urgency}</td>
       <td>${r.hospital_name}</td>

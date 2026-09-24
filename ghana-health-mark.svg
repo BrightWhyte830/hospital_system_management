@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title desc">
+  <title id="title">GhanaHealth Portal mark</title>
+  <desc id="desc">A green and gold health cross inside a Ghana-inspired circular mark.</desc>
+  <circle cx="48" cy="48" r="44" fill="#0a4a2e" stroke="#f0c050" stroke-width="4"/>
+  <path d="M41 20h14v21h21v14H55v21H41V55H20V41h21z" fill="#fff"/>
+  <path d="M20 41h21v14H20z" fill="#c9972a" opacity=".95"/>
+  <path d="M55 41h21v14H55z" fill="#1d9a5a"/>
+  <circle cx="48" cy="48" r="8" fill="#0a4a2e"/>
+</svg>

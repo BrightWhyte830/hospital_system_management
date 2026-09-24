@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GhanaHealth Portal — National Hospital Registration System</title>
+<meta name="description" content="GhanaHealth Portal — secure national patient registration and hospital services for Ghana.">
+<title>GhanaHealth Portal — Ministry of Health, Ghana</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<a class="skip-link" href="#page-landing">Skip to main content</a>
 
 <!-- Shown only when an admin turns on maintenance mode from the console -->
 <div id="maint-banner" style="display:none;background:var(--amber);color:#fff;text-align:center;padding:8px 14px;font-size:.8rem;font-weight:600;position:relative;z-index:1100">
@@ -16,12 +18,17 @@
 </div>
 
 <!-- ══════════════════════ NAVBAR ══════════════════════ -->
-<nav>
+<nav id="main-nav" aria-label="Primary navigation">
   <div class="nav-brand">
-    <div class="nav-logo">GH</div>
+    <div class="nav-logo" aria-hidden="true"><img src="assets/portal/ghana-flag.png" alt=""></div>
     <div class="nav-title">GhanaHealth Portal
-      <span>National Hospital Registration System</span>
+      <span>Ministry of Health — Republic of Ghana</span>
     </div>
+  </div>
+  <div class="nav-center">
+    <a href="#services-anchor" class="nav-link">Services</a>
+    <a href="#hospitals-anchor" class="nav-link">Hospitals</a>
+    <a href="#why-anchor" class="nav-link">Why GhanaHealth</a>
   </div>
   <div class="nav-links" id="nav-pub">
     <button class="nav-btn nb-ghost" onclick="showPage('auth');switchAuthTab('login')">Sign In</button>
@@ -35,38 +42,114 @@
 </nav>
 
 <!-- ══════════════════════ LANDING PAGE ══════════════════════ -->
-<div class="page active" id="page-landing">
-  <div class="hero">
-    <div class="hero-badge">🇬🇭 Ministry of Health — Republic of Ghana</div>
-    <h1>Your Health Record,<br><em>One Card Away.</em></h1>
-    <p class="hero-sub">Register once with your Ghana Card and access all hospital services nationwide. Get your personal QR code for instant identification at any department — no paperwork, no delays.</p>
-    <div class="hero-actions">
-      <button class="btn btn-gd btn-lg" onclick="showPage('auth');switchAuthTab('register')">📋 Register as a Patient</button>
-      <button class="btn btn-out btn-lg" onclick="showPage('auth');switchAuthTab('login')">🔐 Patient Sign In</button>
+<main class="page active" id="page-landing" tabindex="-1">
+  <section class="portal-hero">
+    <div class="portal-hero-bg" aria-hidden="true"></div>
+    <div class="portal-hero-inner">
+      <div class="portal-hero-copy">
+        <div class="hero-badge"><img src="assets/portal/ghana-flag.png" alt="Ghana flag"> Ministry of Health — Republic of Ghana</div>
+        <h1>Your Health,<br><em>Digitally Secured.</em></h1>
+        <p class="hero-sub">Register once with your Ghana Card and access world-class hospital services nationwide. Your encrypted QR patient ID works at every department — no paperwork, no delays, no lost files.</p>
+        <div class="hero-actions">
+          <button class="btn btn-gold btn-lg" onclick="showPage('auth');switchAuthTab('register')">📋 Register as a Patient</button>
+          <button class="btn btn-out hero-out btn-lg" onclick="showPage('auth');switchAuthTab('login')">🔐 Sign In to Portal</button>
+        </div>
+        <div class="hero-stats">
+          <div><strong>13+</strong><span>Departments</span></div>
+          <div><strong>11</strong><span>Major hospitals</span></div>
+          <div><strong>24/7</strong><span>Emergency support</span></div>
+          <div><strong>100%</strong><span>Secure &amp; encrypted</span></div>
+        </div>
+        <a class="hero-scroll-link" href="#services-anchor">↓ Explore hospital services</a>
+      </div>
+      <div class="hero-services" aria-label="Featured services">
+        <div class="hero-service"><img src="assets/portal/emergency-care.jpg" alt=""><div><strong>Emergency Care</strong><small>Support at registered facilities</small></div></div>
+        <div class="hero-service"><img src="assets/portal/laboratory.jpg" alt=""><div><strong>Diagnostics</strong><small>Imaging and laboratory services</small></div></div>
+        <div class="hero-service"><img src="assets/portal/medical-professionals.jpg" alt=""><div><strong>Maternal &amp; Child Health</strong><small>Care for mothers and newborns</small></div></div>
+        <div class="hero-service"><span>📲</span><div><strong>Digital Patient ID</strong><small>One secure code, every department</small></div></div>
+      </div>
     </div>
-  </div>
-  <div class="chips-section">
-    <p class="chips-label">Services Available Across All Registered Hospitals</p>
-    <div class="chips-wrap">
-      <div class="chip">🚑 Emergency Care</div><div class="chip">🔬 Surgery</div>
-      <div class="chip">🤱 Maternal &amp; Child Health</div><div class="chip">🩻 Diagnostic Imaging</div>
-      <div class="chip">🧪 Laboratory Services</div><div class="chip">💊 Pharmacy</div>
-      <div class="chip">🫀 Renal Dialysis</div><div class="chip">❤️ Cardiothoracic Surgery</div>
-      <div class="chip">👂 ENT Services</div><div class="chip">🦷 Dental &amp; Oral Surgery</div>
-      <div class="chip">🧠 Psychiatry</div><div class="chip">🏃 Physiotherapy</div>
-      <div class="chip">🥗 Nutrition &amp; Dietetics</div>
+  </section>
+
+  <section class="portal-section services-band" id="services-anchor">
+    <div class="portal-section-head"><div class="section-kicker">Hospital Services</div><h2>One registration.<br>Every essential department.</h2><p>Use your GhanaHealth patient account to request services, book appointments, and stay connected to the facilities that care for you.</p></div>
+    <div class="service-grid">
+      <div class="service-tile"><span>🚑</span><strong>Emergency Care</strong><small>Trauma and acute treatment</small></div>
+      <div class="service-tile"><span>🩺</span><strong>Surgery</strong><small>General and specialist procedures</small></div>
+      <div class="service-tile"><span>👶</span><strong>Maternal &amp; Child Health</strong><small>Antenatal and paediatric care</small></div>
+      <div class="service-tile"><span>📷</span><strong>Diagnostic Imaging</strong><small>X-ray, MRI, CT and ultrasound</small></div>
+      <div class="service-tile"><span>🧫</span><strong>Laboratory Services</strong><small>Pathology and testing</small></div>
+      <div class="service-tile"><span>💊</span><strong>Pharmacy</strong><small>Medication and consultation</small></div>
+      <div class="service-tile"><span>🩸</span><strong>Renal Dialysis</strong><small>Haemodialysis programmes</small></div>
+      <div class="service-tile"><span>❤️‍🩺</span><strong>Cardiothoracic Surgery</strong><small>Cardiac and thoracic interventions</small></div>
+      <div class="service-tile"><span>👂</span><strong>ENT Services</strong><small>Ear, nose and throat care</small></div>
+      <div class="service-tile"><span>🦷</span><strong>Dental &amp; Oral Surgery</strong><small>Preventive and surgical dental care</small></div>
+      <div class="service-tile"><span>🧠</span><strong>Psychiatry</strong><small>Mental health assessment and rehabilitation</small></div>
+      <div class="service-tile"><span>🦵</span><strong>Physiotherapy</strong><small>Rehabilitation and therapy</small></div>
+      <div class="service-tile"><span>🥗</span><strong>Nutrition &amp; Dietetics</strong><small>Clinical nutrition planning</small></div>
     </div>
-  </div>
-</div>
+  </section>
+
+  <section class="portal-section why-band" id="why-anchor">
+    <div class="why-layout">
+      <div>
+        <div class="section-kicker">Why GhanaHealth Portal</div>
+        <h2>Built for Ghana's healthcare future.</h2>
+        <p class="why-lead">A secure, government-backed digital health platform that puts patients first, powered by the National Identification Authority and the Ministry of Health.</p>
+        <div class="why-list">
+          <div><span>🪪</span><p><strong>Ghana Card integration</strong><small>Your NIA Ghana Card becomes your verified health identity and travels with you across every registered facility.</small></p></div>
+          <div><span>📲</span><p><strong>Instant patient QR code</strong><small>Present one encrypted code at reception for faster identification and less paperwork.</small></p></div>
+          <div><span>🔒</span><p><strong>Data protection compliant</strong><small>Your personal information is protected under Ghana's Data Protection Act, 2012 (Act 843).</small></p></div>
+          <div><span>🏥</span><p><strong>Nationwide access</strong><small>Connect with teaching hospitals, regional hospitals, and district health centres across all 16 regions.</small></p></div>
+        </div>
+        <button class="btn btn-forest btn-lg why-cta" onclick="showPage('auth');switchAuthTab('register')">Get started — Register free →</button>
+      </div>
+      <div class="why-visual"><img src="assets/portal/hospital-hallway.jpg" alt="Hospital hallway"><img src="assets/portal/medical-professionals.jpg" alt="Medical professionals"><span>✅ Verified by NIA &amp; NHIA</span></div>
+    </div>
+  </section>
+
+  <section class="portal-section hospitals-band" id="hospitals-anchor">
+    <div class="portal-section-head"><div class="section-kicker">Partner Facilities</div><h2>Major registered hospitals.</h2><p>Your GhanaHealth patient ID is accepted at these facilities and hundreds of district health centres across every region.</p></div>
+    <div class="hospital-preview">
+      <div><img src="assets/portal/korle-bu.jpg" alt="Korle-Bu Teaching Hospital"><strong>Korle-Bu Teaching Hospital</strong><span>Accra, Greater Accra Region</span><div class="hospital-tags"><b>Teaching</b><b>Tertiary</b><b>All Specialties</b></div></div>
+      <div><img src="assets/portal/komfo-anokye.jpg" alt="Komfo Anokye Teaching Hospital"><strong>Komfo Anokye Teaching Hospital</strong><span>Kumasi, Ashanti Region</span><div class="hospital-tags"><b>Teaching</b><b>Cardiac Centre</b><b>Trauma</b></div></div>
+      <div><img src="assets/portal/military-hospital.jpg" alt="37 Military Hospital"><strong>37 Military Hospital</strong><span>Accra, Greater Accra Region</span><div class="hospital-tags"><b>Military</b><b>General</b><b>ENT</b></div></div>
+      <div><img src="assets/portal/cape-coast-hospital.jpg" alt="Cape Coast Teaching Hospital"><strong>Cape Coast Teaching Hospital</strong><span>Cape Coast, Central Region</span><div class="hospital-tags"><b>Teaching</b><b>Regional</b></div></div>
+      <div><img src="assets/portal/tamale-hospital.jpg" alt="Tamale Teaching Hospital"><strong>Tamale Teaching Hospital</strong><span>Tamale, Northern Region</span><div class="hospital-tags"><b>Teaching</b><b>Northern Ghana</b></div></div>
+      <div><img src="assets/portal/fallback-clinic.jpg" alt="Ho Teaching Hospital"><strong>Ho Teaching Hospital</strong><span>Ho, Volta Region</span><div class="hospital-tags"><b>Teaching</b><b>Laboratory</b></div></div>
+    </div>
+    <button class="btn btn-out-dk btn-lg" id="all-hospitals-btn" onclick="showAllHospitals()">View all 11 partner hospitals →</button>
+  </section>
+
+  <section class="portal-cta" aria-labelledby="portal-cta-title">
+    <div class="portal-cta-image" aria-hidden="true"></div>
+    <div class="portal-cta-content">
+      <h2 id="portal-cta-title">Register today.<br>Your health record, anywhere.</h2>
+      <p>Join Ghanaians who have secured their health identity. Registration is free, secure, and takes less than five minutes.</p>
+      <div class="hero-actions"><button class="btn btn-gold btn-lg" onclick="showPage('auth');switchAuthTab('register')">📋 Register — It's free</button><button class="btn btn-out hero-out btn-lg" onclick="showPage('auth');switchAuthTab('login')">🔐 Patient sign in</button></div>
+    </div>
+  </section>
+</main>
 
 <!-- ══════════════════════ AUTH PAGE ══════════════════════ -->
 <div class="page" id="page-auth">
-  <div class="auth-wrap" style="padding-top:2rem">
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="atab-register" onclick="switchAuthTab('register')">📋 Patient Registration</button>
-      <button class="auth-tab" id="atab-login" onclick="switchAuthTab('login')">🔐 Sign In</button>
+  <div class="patient-auth-layout">
+    <div class="patient-auth-visual" role="img" aria-label="Healthcare professional in a hospital">
+      <img src="assets/portal/medical-professionals.jpg" alt="Healthcare professional in a hospital">
+      <div class="patient-auth-overlay"></div>
+      <div class="patient-auth-copy">
+        <div class="hero-badge"><img src="assets/portal/ghana-flag.png" alt="Ghana flag"> Ministry of Health — Republic of Ghana</div>
+        <h2>Ghana's digital health identity platform.</h2>
+        <p>Secure, verified, and recognised at every GhanaHealth-registered hospital and health facility across all 16 regions.</p>
+        <div class="patient-auth-trust"><img src="assets/portal/ghana-flag.png" alt="Ghana flag"><span><strong>Government of Ghana</strong>Protected under the Data Protection Act, 2012 (Act 843)</span></div>
+      </div>
     </div>
-    <div class="auth-card">
+    <div class="auth-wrap patient-auth-form" style="padding-top:2rem">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="atab-register" onclick="switchAuthTab('register')">📋 Patient Registration</button>
+        <button class="auth-tab" id="atab-login" onclick="switchAuthTab('login')">🔐 Sign In</button>
+      </div>
+      <div class="auth-card">
 
       <!-- ── REGISTER PANEL ── -->
       <div class="auth-panel active" id="apanel-register">
@@ -89,7 +172,7 @@
         <div class="fgrid">
           <div class="field"><label>First Name <span class="req">*</span></label><input type="text" id="r-fname" placeholder="e.g. Kwame" oninput="updProg()"></div>
           <div class="field"><label>Last Name <span class="req">*</span></label><input type="text" id="r-lname" placeholder="e.g. Mensah" oninput="updProg()"></div>
-          <div class="field"><label>Date of Birth <span class="req">*</span></label><input type="date" id="r-dob" oninput="updProg()"></div>
+          <div class="field"><label for="r-dob">Date of Birth <span class="req">*</span></label><input type="date" id="r-dob" aria-describedby="r-age-preview" oninput="updProg();updateRegistrationAge()"><span class="field-hint" id="r-age-preview" aria-live="polite">Your age will appear here.</span></div>
           <div class="field"><label>Gender <span class="req">*</span></label>
             <div class="radio-row">
               <div class="ro"><input type="radio" name="gender" id="g-m" value="Male"><label for="g-m">♂ Male</label></div>
@@ -156,6 +239,7 @@
     </div>
   </div>
 </div>
+</div>
 
 <!-- ══════════════════════ DASHBOARD PAGE ══════════════════════ -->
 <div class="page" id="page-dashboard">
@@ -178,11 +262,16 @@
         <div class="db-sec-hdr"><h2>Patient Dashboard</h2><p>Welcome back. Here's a summary of your health portal activity.</p></div>
 
         <div class="pt-banner">
-          <div class="pt-ava" id="db-ava">KM</div>
-          <div class="pt-info">
-            <h3 id="db-name">Patient Name</h3>
-            <p id="db-details">—</p>
-            <span class="pt-pid" id="db-pid">GH-PAT-000000</span>
+          <img class="pt-banner-img" src="assets/portal/medical-professionals.jpg" alt="Medical professionals">
+          <div class="pt-banner-body">
+            <div class="pt-banner-left">
+              <div class="pt-ava-fb" id="db-ava">KM</div>
+              <div>
+                <h3 id="db-name">Patient Name</h3>
+                <p id="db-details">—</p>
+                <span class="pt-pid" id="db-pid">GH-PAT-000000</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -421,14 +510,13 @@
 
 <!-- ══════ FOOTER ══════ -->
 <footer>
-  <div class="ft-logo"><div class="ft-logo-icon">GH</div><strong>GhanaHealth Portal</strong></div>
-  <div class="ft-links">
-    <a href="#">Privacy Policy</a><a href="#">Terms of Use</a><a href="#">Data Protection</a>
-    <a href="#">Help &amp; Support</a><a href="#">Contact Us</a><a href="#">Accessibility</a>
+  <div class="footer-inner">
+    <div class="footer-brand"><img src="assets/portal/ghana-flag.png" alt="Ghana flag"><h3>GhanaHealth Portal</h3><p>The national hospital patient registration system, powered by the Ministry of Health and the National Identification Authority of the Republic of Ghana.</p></div>
+    <div class="footer-col"><h4>Services</h4><a href="#services-anchor">Patient Registration</a><a href="#services-anchor">Book Appointment</a><a href="#services-anchor">Request Service</a><a href="#services-anchor">File a Complaint</a><a href="#why-anchor">My QR Code</a></div>
+    <div class="footer-col"><h4>Hospitals</h4><a href="#hospitals-anchor">Korle-Bu Teaching Hospital</a><a href="#hospitals-anchor">KATH, Kumasi</a><a href="#hospitals-anchor">37 Military Hospital</a><a href="#hospitals-anchor">Cape Coast Teaching Hospital</a><a href="#hospitals-anchor">All Facilities →</a></div>
+    <div class="footer-col"><h4>Legal &amp; Support</h4><a href="#">Privacy Policy</a><a href="#">Terms of Use</a><a href="#">Data Protection (Act 843)</a><a href="#">Help &amp; FAQs</a><a href="#">Accessibility</a></div>
   </div>
-  <div>© 2026 GhanaHealth Portal — <strong>Ministry of Health, Republic of Ghana</strong></div>
-  <div style="margin-top:3px">Authorized by the NHIA &amp; National Identification Authority (NIA)</div>
-  <div style="margin-top:3px;opacity:.45;font-size:.7rem">Patient Helplines: 0544 260 591 &nbsp;|&nbsp; 0550 599 102 &nbsp;|&nbsp; Emergency: 0800 100 999 (Toll-Free)</div>
+  <div class="footer-bottom"><p>© 2026 GhanaHealth Portal — <strong>Ministry of Health, Republic of Ghana</strong>. Authorized by NHIA &amp; NIA.</p><div class="emergency">Emergency: 0800-100-999 (Toll-Free) &nbsp;|&nbsp; 0544-260-591 &nbsp;|&nbsp; 0550-599-102</div></div>
 </footer>
 
 <!-- ══════ QR REGISTRATION MODAL ══════ -->
@@ -464,10 +552,11 @@
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toast">✅ <span id="toast-msg"></span></div>
+<div class="toast" id="toast" role="status" aria-live="polite">✅ <span id="toast-msg"></span></div>
 
 <script src="js/api.js"></script>
 <script src="js/state.js"></script>
+<script src="js/icons.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/dashboard.js"></script>
 <script src="js/services.js"></script>

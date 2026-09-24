@@ -1,0 +1,17 @@
+{
+  "description": "Local image assets sourced from the original GhanaHealth portal design reference.",
+  "assets": [
+    { "file": "hero-hospital.jpg", "source": "https://images.unsplash.com/photo-1666214280557-f1b5022eb634" },
+    { "file": "emergency-care.jpg", "source": "https://images.unsplash.com/photo-1559757175-0eb30cd8c063" },
+    { "file": "laboratory.jpg", "source": "https://images.unsplash.com/photo-1551076805-e1869033e561" },
+    { "file": "hospital-hallway.jpg", "source": "https://images.unsplash.com/photo-1538108149393-fbbd81895907" },
+    { "file": "medical-professionals.jpg", "source": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d" },
+    { "file": "korle-bu.jpg", "source": "https://images.unsplash.com/photo-1586773860418-d37222d8fce3" },
+    { "file": "komfo-anokye.jpg", "source": "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d" },
+    { "file": "fallback-clinic.jpg", "source": "https://images.unsplash.com/photo-1512678080530-7760d81faba6" },
+    { "file": "military-hospital.jpg", "source": "https://images.unsplash.com/photo-1516549655169-df83a0774514" },
+    { "file": "cape-coast-hospital.jpg", "source": "https://images.unsplash.com/photo-1504813184591-01572f98c85f" },
+    { "file": "tamale-hospital.jpg", "source": "https://images.unsplash.com/photo-1579684385127-1ef15d508118" },
+    { "file": "ghana-flag.png", "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Flag_of_Ghana.svg/120px-Flag_of_Ghana.svg.png" }
+  ]
+}

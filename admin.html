@@ -9,15 +9,24 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<a class="skip-link" href="#admin-content">Skip to main content</a>
 
 <!-- ══════════════════════ LOGIN PAGE ══════════════════════ -->
 <div class="page active" id="page-login">
-  <div class="hero" style="padding-top:4rem">
-    <div class="hero-badge">🇬🇭 Ministry of Health — Republic of Ghana</div>
-    <h1>Staff &amp; Admin<br><em>Console.</em></h1>
-    <p class="hero-sub">Sign in with your GhanaHealth staff account to triage patient requests, manage hospitals, and administer the portal.</p>
-  </div>
-  <div class="auth-wrap" style="max-width:440px">
+  <div class="admin-login-layout">
+    <div class="admin-login-visual" role="img" aria-label="Healthcare professionals working in a hospital">
+      <div class="admin-login-visual-content">
+        <div class="hero-badge">🇬🇭 Ministry of Health — Republic of Ghana</div>
+        <h1>Staff &amp; Admin<br><em>Console.</em></h1>
+        <p class="hero-sub">One secure workspace for the teams keeping Ghana's hospitals connected, responsive, and ready to care.</p>
+        <div class="admin-login-highlights">
+          <span>🛡️ Role-based access</span>
+          <span>📊 Live hospital operations</span>
+          <span>🔒 Audited and protected</span>
+        </div>
+      </div>
+    </div>
+    <div class="auth-wrap admin-login-form" style="max-width:440px">
     <div class="auth-card" style="border-radius:14px;border-top:1.5px solid var(--border)">
       <div class="login-box" style="max-width:100%">
         <h2>Staff Sign In</h2>
@@ -36,6 +45,7 @@
       </div>
     </div>
   </div>
+  </div>
 </div>
 
 <!-- ══════════════════════ CONSOLE PAGE ══════════════════════ -->
@@ -43,7 +53,7 @@
   <div class="admin-shell">
     <nav class="admin-nav">
       <div class="nav-brand">
-        <div class="nav-logo">GH</div>
+        <div class="nav-logo" aria-hidden="true"><img src="assets/portal/ghana-flag.png" alt=""></div>
         <div class="nav-title">GhanaHealth Console<span>Staff &amp; Administration</span></div>
       </div>
       <div class="nav-user" style="display:flex">
@@ -59,11 +69,12 @@
         <!-- populated by admin/main.js based on role -->
       </div>
 
-      <div class="db-content">
+      <div class="db-content" id="admin-content" tabindex="-1">
 
         <!-- ┌─ OVERVIEW ─┐ -->
         <div class="db-sec active" id="ac-overview">
           <div class="db-sec-hdr"><h2>System Overview</h2><p>Live counts across every registered hospital.</p></div>
+          <div class="db-card access-card" id="access-summary" aria-live="polite"></div>
           <div class="kpi-row" id="kpi-row"></div>
           <div class="two-col">
             <div class="db-card">
@@ -79,6 +90,12 @@
             <p class="db-card-title">Complaint Types</p>
             <div class="bar-list" id="bar-complaints"></div>
           </div>
+        </div>
+
+        <!-- ┌─ IT OPERATIONS ┐ -->
+        <div class="db-sec" id="ac-it">
+          <div class="db-sec-hdr"><h2>IT Operations</h2><p>Monitor portal availability, account activity, and database inventory.</p></div>
+          <div id="it-overview"></div>
         </div>
 
         <!-- ┌─ APPOINTMENTS ─┐ -->
@@ -166,7 +183,7 @@
             <button class="btn btn-gold" onclick="openMod('staff-modal')">➕ Create Staff Account</button>
           </div>
           <div class="db-card"><div class="data-table-wrap"><table class="dt"><thead><tr>
-            <th>Name</th><th>Role</th><th>Email</th><th>Phone</th><th>Patient ID</th><th>Status</th><th>Joined</th><th>Action</th>
+            <th>Name</th><th>Access</th><th>Email</th><th>Phone &amp; Age</th><th>Patient ID</th><th>Hospital Role</th><th>Status</th><th>Joined</th><th>Action</th>
           </tr></thead><tbody id="user-body"></tbody></table></div>
           <div class="pager">
             <span id="user-pager-info"></span>
@@ -248,8 +265,28 @@
     <div class="field" style="margin-bottom:.8rem"><label>Role <span class="req">*</span></label>
       <select id="ns-role"><option value="staff">Staff (hospital-level access)</option><option value="admin">Admin (full system access)</option></select>
     </div>
+    <div class="field" style="margin-bottom:.8rem"><label>Hospital Staff Role <span class="req">*</span></label><select id="ns-job-role"></select></div>
+    <div class="field" style="margin-bottom:.8rem"><label>Department</label><input type="text" id="ns-department" placeholder="e.g. Emergency Department, IT Services"></div>
     <div class="field" style="margin-bottom:.8rem"><label>Assigned Hospital <span class="opt">(staff only)</span></label><select id="ns-hosp"></select></div>
     <button class="sbtn" onclick="createStaffAccount()">✅ Create Account</button>
+  </div>
+</div>
+
+<!-- ══════ EDIT USER MODAL ══════ -->
+<div class="modal-ov" id="edit-user-modal">
+  <div class="modal" style="text-align:left;max-width:440px">
+    <button class="mc" onclick="closeMod('edit-user-modal')">✕</button>
+    <h2 style="margin-bottom:1rem">Edit Staff Profile</h2>
+    <input type="hidden" id="edit-user-id">
+    <div class="fgrid">
+      <div class="field"><label>First Name</label><input type="text" id="edit-fname"></div>
+      <div class="field"><label>Last Name</label><input type="text" id="edit-lname"></div>
+      <div class="field full"><label>Phone</label><input type="tel" id="edit-phone"></div>
+      <div class="field full"><label>Hospital Staff Role</label><select id="edit-job-role"></select></div>
+      <div class="field full"><label>Department</label><input type="text" id="edit-department"></div>
+      <div class="field full"><label>Assigned Hospital</label><select id="edit-hosp"></select></div>
+    </div>
+    <button class="sbtn" onclick="saveUserProfile()">Save Profile</button>
   </div>
 </div>
 
@@ -274,6 +311,7 @@
 
 <script src="js/api.js"></script>
 <script src="js/state.js"></script>
+<script src="js/icons.js"></script>
 <script src="js/admin/auth.js"></script>
 <script src="js/admin/dashboard.js"></script>
 <script src="js/admin/appointments.js"></script>

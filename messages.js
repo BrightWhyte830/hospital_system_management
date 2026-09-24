@@ -12,7 +12,7 @@ async function loadMessageQueue() {
   }
   tbody.innerHTML = messages.map((m) => `
     <tr>
-      <td>${m.first_name} ${m.last_name}<br><span style="color:var(--tmut);font-size:.72rem">${m.patient_id}</span></td>
+      <td>${m.first_name} ${m.last_name}<br><span style="color:var(--tmut);font-size:.72rem">${m.patient_id} · Age: ${formatAge(null, m.patient_dob)}</span></td>
       <td>${m.subject}<br><span style="color:var(--tmut);font-size:.74rem">${(m.message || '').slice(0, 60)}${m.message.length > 60 ? '…' : ''}</span></td>
       <td>${m.hospital_name}</td>
       <td>${new Date(m.created_at).toLocaleDateString('en-GB')}</td>

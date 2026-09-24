@@ -52,6 +52,21 @@ function fmtDate(d) {
   return new Date(d + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
 }
 
+function calculateAge(dateOfBirth, today = new Date()) {
+  if (!dateOfBirth) return null;
+  const birthDate = new Date(`${dateOfBirth}T00:00:00`);
+  if (Number.isNaN(birthDate.getTime()) || birthDate > today) return null;
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const birthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+  if (birthday > today) age -= 1;
+  return age >= 0 ? age : null;
+}
+
+function formatAge(age, dateOfBirth) {
+  const resolvedAge = Number.isInteger(age) ? age : calculateAge(dateOfBirth);
+  return Number.isInteger(resolvedAge) ? `${resolvedAge} years` : 'Age unavailable';
+}
+
 function statusBadge(status) {
   const map = {
     confirmed: ['sb-ok', 'Confirmed'], completed: ['sb-ok', 'Completed'],

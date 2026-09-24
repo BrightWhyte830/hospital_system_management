@@ -9,7 +9,7 @@ async function populateDash() {
 
   document.getElementById('db-ava').textContent = ini;
   document.getElementById('db-name').textContent = p.first_name + ' ' + p.last_name;
-  document.getElementById('db-details').textContent = `Email: ${p.email} · Ghana Card: ${p.ghana_card} · DOB: ${p.dob} · ${p.gender}`;
+  document.getElementById('db-details').textContent = `Email: ${p.email} · Ghana Card: ${p.ghana_card} · DOB: ${p.dob} · Age: ${formatAge(p.age, p.dob)} · ${p.gender}`;
   document.getElementById('db-pid').textContent = p.patient_id;
 
   await Promise.all([loadSummary(), loadDbQr()]);
@@ -36,7 +36,7 @@ async function loadDbQr() {
   const { qrCode, patientId } = await Api.get('/patients/me/qr');
   document.getElementById('db-qr-pid').textContent = patientId;
   document.getElementById('db-qr-name').textContent = S.user.first_name + ' ' + S.user.last_name;
-  document.getElementById('db-qr-info').innerHTML = `Ghana Card: ${S.user.ghana_card}<br>Email: ${S.user.email}<br>Phone: ${S.user.phone} &nbsp;|&nbsp; NHIS: ${S.user.nhis || 'N/A'}`;
+  document.getElementById('db-qr-info').innerHTML = `Ghana Card: ${S.user.ghana_card}<br>Email: ${S.user.email}<br>Age: ${formatAge(S.user.age, S.user.dob)} &nbsp;|&nbsp; Phone: ${S.user.phone}<br>NHIS: ${S.user.nhis || 'N/A'}`;
   document.getElementById('db-qrcode').innerHTML = `<img src="${qrCode}" alt="Patient QR code" id="db-qr-img">`;
 }
 
